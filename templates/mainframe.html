@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+
+  <title>{{settings.APP_NAME}}</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Use Chrome Frame -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="application-name" content="{{ settings.APP_NAME }}"/>
+  <meta name="description" content="{{ settings.APP_NAME }}"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="application-url" content="{{settings.WWWROOT}}"/>
+  <link rel="stylesheet" href="/static/css/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="/static/js/jquery.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+  <script type="text/javascript" src="/static/css/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="fb-root"></div>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="#">{{ settings.APP_NAME }}</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        {% for url, label in settings.NAVBAR_ITEMS.items() %}
+                            <li><a href="{{ url }}">{{ label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+           <div id="inner-content">
+              <div id="alerts"><!-- alerts are drawn in via JS here.. --></div>
+              {% block content %}{% endblock %}
+            </div>
+            <footer>{% include "/templates/_footer.html" %}</footer>
+
+    </div>
+    <div id="alert-template" style="display:none;">
+        <div class="alert"><a class="close" data-dismiss="alert" href="#">&times;</div>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+    alerts = {{_flash|json_encode|safe}};
+    $(document).ready(function() {
+            // Activate tooltips
+            $('[rel=tooltip]').tooltip({ placement: 'bottom', live: true });
+
+            // Show Alerts.
+            for(a in alerts) {
+                showAlert(alerts[a][1],alerts[a][0]);
+            }
+
+    });
+    function showAlert(type,msg) {
+        clone = $("#alert-template .alert").clone();
+        clone.addClass("alert-"+type);
+        clone.prepend(msg);
+        elem = clone.appendTo("#alerts");
+        // Gracefully collapse alerts after 5 seconds.
+        window.setTimeout(function() {
+            $(elem).fadeOut(500);
+        },5*1000)
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,10 @@
+{% extends "templates/mainframe.html" %}
+{% block content %}
+<div class="page-header">
+    <h1>Access Denied</h1>
+</div>
+
+<p class="alert alert-danger">Sorry, it looks like you don't have access to this page.</p>
+<p>Request URI: {{uri}}</p>
+<a class="btn" href="javascript:history.go(-1);">&laquo; Back</a>
+{% endblock %}

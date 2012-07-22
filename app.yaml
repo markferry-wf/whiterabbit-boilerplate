@@ -1,0 +1,44 @@
+application: driverocket
+version: 1
+runtime: python27
+threadsafe: yes
+api_version: 1
+
+default_expiration: 4h  # This is good for images, which never change
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /favicon\.ico
+  static_files: static/img/favicon.ico
+  upload: static/img/favicon\.ico
+
+- url: /backends/.*
+  script: backends.app.wsgi
+
+- url: .*
+  script: main.app.wsgi
+
+
+libraries:
+- name: jinja2
+  version: latest
+  
+builtins:
+- appstats: on
+
+inbound_services:
+- warmup
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*\.less$
